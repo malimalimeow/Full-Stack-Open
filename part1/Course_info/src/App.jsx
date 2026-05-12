@@ -18,7 +18,7 @@ const Content = (props) => {
 
     return (
         <div>
-            {props.parts.map((p,index) => <Part key={index} part={p.name} exercise={p.exercises}/>)}
+            {props.parts.map((p,index) => <Part key={`${Date.Now()}_${index}`} part={p.name} exercise={p.exercises}/>)}
         </div>
 
     )
