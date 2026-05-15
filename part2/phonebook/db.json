@@ -1,24 +1,50 @@
 {
-    "persons": [
-        {
-            "name": "Arto Hellas",
-            "number": "040-123456",
-            "id": "1"
-        },
-        {
-            "name": "Ada Lovelace",
-            "number": "39-44-5323523",
-            "id": "2"
-        },
-        {
-            "name": "Dan Abramov",
-            "number": "12-43-234345",
-            "id": "3"
-        },
-        {
-            "name": "Mary Poppendieck",
-            "number": "39-23-6423122",
-            "id": "4"
-        }
-    ]
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "040-123456",
+      "id": "1"
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": "2"
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": "3"
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": "4"
+    },
+    {
+      "name": "heidy",
+      "number": "12640124",
+      "id": "8AeZgDM_vKM"
+    },
+    {
+      "name": "rgaehoghwIE",
+      "number": "126496421041",
+      "id": "8yaVXpMOpBM"
+    },
+    {
+      "name": "SGBHALJDBKVF",
+      "number": "125496242",
+      "id": "aWqYg_UvN3U"
+    },
+    {
+      "name": "DFBKAHFOUWHFW",
+      "number": "12649462",
+      "id": "X3TANa8U2Q8"
+    },
+    {
+      "name": "FGDSHJFGSH",
+      "number": "147269494804",
+      "id": "Uh2JoEck8-0"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
 }
