@@ -1,0 +1,106 @@
+import React from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import country from "./services/country";
+
+const ShowTarget = ({ targetCountry }) => {
+  const { countryName, capital, area, lang, flag } = targetCountry
+
+  return (
+
+    <div>
+      <h1>{countryName}</h1>
+      {capital.map((cap,i)=><p key={i}> Capital :{cap}</p>)}
+      <p>Area: {area}</p>
+      <h1>Language</h1>
+      <ul>
+        {lang.map((lang,i) => <li key={i}>{lang}</li>)}
+      </ul>
+      <img src={flag.png} alt={flag.alt? flag.alt:"Country Flag"} />
+
+    </div>)
+}
+
+
+const App = () => {
+
+  const [name, setName] = useState("")
+  const [allCountryName, setAllName] = useState([])
+  const [show, setShow] = useState("")
+  const [targetCountry, setTargetCountry] = useState({})
+
+  const target = (countryName) => {
+    country.getOne(countryName)
+      .then(countryDetail => {
+        const country_name = countryDetail.name["common"]
+        const country_capital = countryDetail.capital
+        const country_area = countryDetail.area
+        const country_lang = Object.values(countryDetail.languages)
+        const country_flag = countryDetail.flags
+
+        setTargetCountry({
+          "countryName": country_name,
+          "capital": country_capital,
+          "area": country_area,
+          "lang": country_lang,
+          "flag": country_flag
+        })
+
+      })
+
+  }
+
+
+
+
+  useEffect(() => {
+    country
+      .getAll()
+      .then(allCountry => {
+        const all = allCountry.map(a => a.name["common"])
+        setAllName(all)
+      })
+  }, [])
+
+  useEffect(() => {
+    if (name === "") { return }
+
+    const filtered = allCountryName.filter(a => a.startsWith(name))
+
+    if (filtered.length > 10) { setShow("Too many matches,specify another filter") }
+    else if (filtered.length > 1) { setShow(filtered) }
+    else if (filtered.length === 1) {
+      setShow("")
+      filtered.map(p => {
+        const place = p.toLowerCase()
+        target(place)})
+    }
+    else { setShow("") }
+
+  }, [name, setName])
+
+  const handleChange = (e) => {
+    const newName = e.target.value
+    const format = newName.slice(0, 1).toUpperCase() + newName.slice(1)
+
+    setName(format)
+  }
+
+  const targetFound = Object.keys(targetCountry).length > 0
+  const pickShow = show === "" ? null: Array.isArray(show) ? show.map((f, i) => <p key={i}>{f}</p>) : <p>{show}</p>
+
+  return (
+    <div>
+      <form>
+        <p>Find country <input onChange={(e) => handleChange(e)} /></p>
+      </form>
+
+      {targetFound ? <ShowTarget targetCountry={targetCountry} /> :  pickShow }
+    
+    </div>
+  )
+}
+
+export default App
+
+
