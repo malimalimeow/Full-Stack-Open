@@ -3,6 +3,18 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import country from "./services/country";
 
+const ShowFiltered = ({ show ,setTargetCountry,target }) => (
+  show.map((f, i) => <FilteredLine key={i} countryName={f} setTargetCountry={setTargetCountry} target={target} />)
+)
+
+const FilteredLine = ({  countryName , setTargetCountry, target }) => (  
+    <div >
+      <span >{`${countryName} `}</span>
+      <button onClick={()=>target(countryName)}>show</button>
+    </div>
+  
+)
+
 const ShowTarget = ({ targetCountry }) => {
   const { countryName, capital, area, lang, flag } = targetCountry
 
@@ -10,13 +22,13 @@ const ShowTarget = ({ targetCountry }) => {
 
     <div>
       <h1>{countryName}</h1>
-      {capital.map((cap,i)=><p key={i}> Capital :{cap}</p>)}
+      {capital.map((cap, i) => <p key={i}> Capital :{cap}</p>)}
       <p>Area: {area}</p>
       <h1>Language</h1>
       <ul>
-        {lang.map((lang,i) => <li key={i}>{lang}</li>)}
+        {lang.map((lang, i) => <li key={i}>{lang}</li>)}
       </ul>
-      <img src={flag.png} alt={flag.alt? flag.alt:"Country Flag"} />
+      <img src={flag.png} alt={flag.alt ? flag.alt : "Country Flag"} />
 
     </div>)
 }
@@ -50,9 +62,6 @@ const App = () => {
 
   }
 
-
-
-
   useEffect(() => {
     country
       .getAll()
@@ -63,17 +72,20 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (name === "") { return }
+    if (name === "") { 
+      setTargetCountry({}) 
+      setShow("")
+      return }
 
+    setTargetCountry({}) 
     const filtered = allCountryName.filter(a => a.startsWith(name))
 
     if (filtered.length > 10) { setShow("Too many matches,specify another filter") }
     else if (filtered.length > 1) { setShow(filtered) }
     else if (filtered.length === 1) {
       setShow("")
-      filtered.map(p => {
-        const place = p.toLowerCase()
-        target(place)})
+      const place= filtered[0].toLowerCase()
+        target(place)
     }
     else { setShow("") }
 
@@ -87,7 +99,8 @@ const App = () => {
   }
 
   const targetFound = Object.keys(targetCountry).length > 0
-  const pickShow = show === "" ? null: Array.isArray(show) ? show.map((f, i) => <p key={i}>{f}</p>) : <p>{show}</p>
+
+  const pickShow = show === "" ? null : Array.isArray(show) ? <ShowFiltered show={show} setTargetCountry={setTargetCountry} target={target} /> : <p>{show}</p>
 
   return (
     <div>
@@ -95,8 +108,8 @@ const App = () => {
         <p>Find country <input onChange={(e) => handleChange(e)} /></p>
       </form>
 
-      {targetFound ? <ShowTarget targetCountry={targetCountry} /> :  pickShow }
-    
+      {targetFound ? <ShowTarget targetCountry={targetCountry} /> : pickShow}
+
     </div>
   )
 }
