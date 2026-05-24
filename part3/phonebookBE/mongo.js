@@ -1,3 +1,4 @@
+require('dotenv').config()
 const mongoose = require('mongoose')
 
 if (process.argv.length < 3) {
@@ -7,7 +8,7 @@ if (process.argv.length < 3) {
 
 const password = process.argv[2]
 
-const url = `mongodb://Malimalimeow:${password}@ac-hw1wb7j-shard-00-00.ygrbjdm.mongodb.net:27017,ac-hw1wb7j-shard-00-01.ygrbjdm.mongodb.net:27017,ac-hw1wb7j-shard-00-02.ygrbjdm.mongodb.net:27017/?ssl=true&replicaSet=atlas-sex75p-shard-0&authSource=admin&appName=Cluster0`
+const url = process.env.MONGODB_URI
 
 mongoose.set('strictQuery', false)
 

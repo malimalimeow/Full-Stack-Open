@@ -1,9 +1,9 @@
 GET http://localhost:3001/api/persons/
 
 ### separator
-POST http://localhost:3001/api/persons/ HTTP/1.1
+PUT http://localhost:3001/api/persons/6a13461f5a4770cc06e5b764
 content-type: application/json
 
-{  
-    "number": "714696412941" 
+{  "name" :"pooooo",
+    "number": "97584754574" 
 }
