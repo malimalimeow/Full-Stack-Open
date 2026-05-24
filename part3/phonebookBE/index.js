@@ -71,7 +71,7 @@ app.get('/info', (request, response) => {
 
 })
 
-app.get('/api/persons/:id', (request, response) => {
+app.get('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     Persons.findById(id).then(person => {
         if (person) {
@@ -96,7 +96,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
     const body = request.body
 
     if (!body.name || !body.number) {
@@ -119,15 +119,20 @@ app.post('/api/persons', (request, response) => {
 
         person.save().then(savedPerson => {
             response.json(savedPerson)
-        })
+        }).catch(error => {
+        next(error)
+        
+    }).catch(error => {
+        next(error)
+        
     })
-})
+})})
 
 app.put('/api/persons/:id', (request, response, next) => {
     const id = request.params.id
     const body = request.body
 
-    Persons.findByIdAndUpdate(id, { name: body.name, number: body.number }, { returnDocument: 'after' }).then(person => {
+    Persons.findByIdAndUpdate(id, { name: body.name, number: body.number }, { returnDocument: 'after', runValidators: true }).then(person => {
         if (person) {
             response.json(person)
         } else {
@@ -135,7 +140,7 @@ app.put('/api/persons/:id', (request, response, next) => {
         }
     }).catch(error => {
         next(error)
-        console.log(error.response.data.error)
+        
     }
     )
 })
