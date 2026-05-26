@@ -4,15 +4,6 @@ const url = process.env.MONGODB_URI;
 
 mongoose.set("strictQuery", false);
 
-mongoose
-  .connect(url, { family: 4 })
-  .then(() => {
-    console.log("connected to MongoDB");
-  })
-  .catch((error) => {
-    console.log("error connecting to MongoDB:", error.message);
-  });
-
 const blogSchema = mongoose.Schema({
   title: String,
   author: String,
