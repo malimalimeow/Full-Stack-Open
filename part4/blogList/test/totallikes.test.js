@@ -95,7 +95,7 @@ describe("favorite Blog ", () => {
     assert.deepStrictEqual(result, listWithOneBlog);
   });
 
-  test("when list has only one blog, return the most like one", () => {
+  test("when list has more than one blog, return the most like one", () => {
     const result = listHelper.favoriteBlog(listWithNBlog);
     assert.deepStrictEqual(result, {
       _id: "5a422b3a1b54a676234d17f9",
@@ -104,6 +104,46 @@ describe("favorite Blog ", () => {
       url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
       __v: 0,
+    });
+  });
+});
+
+describe("Most Blogs ", () => {
+  test("of empty list is none", () => {
+    const result = listHelper.mostBlogs([]);
+    assert.deepStrictEqual(result, null);
+  });
+
+  test("when list has only one blog, return that blog", () => {
+    const result = listHelper.mostBlogs(listWithOneBlog);
+    assert.deepStrictEqual(result, { author: "Edsger W. Dijkstra", blogs: 1 });
+  });
+
+  test("when list has more than one blog, return the most blogs one", () => {
+    const result = listHelper.mostBlogs(listWithNBlog);
+    assert.deepStrictEqual(result, {
+      author: "Robert C. Martin",
+      blogs: 3,
+    });
+  });
+});
+
+describe("Most Likes ", () => {
+  test("of empty list is none", () => {
+    const result = listHelper.mostLikes([]);
+    assert.deepStrictEqual(result, null);
+  });
+
+  test("when list has only one blog, return that blog", () => {
+    const result = listHelper.mostLikes(listWithOneBlog);
+    assert.deepStrictEqual(result, { author: "Edsger W. Dijkstra", likes: 5 });
+  });
+
+  test("when list has more than one blog, return the most likes one", () => {
+    const result = listHelper.mostLikes(listWithNBlog);
+    assert.deepStrictEqual(result, {
+      author: "Edsger W. Dijkstra",
+      likes: 17,
     });
   });
 });
