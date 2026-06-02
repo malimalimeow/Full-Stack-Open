@@ -32,7 +32,7 @@ blogRouter.post("/", (request, response, next) => {
   blog
     .save()
     .then((savedBlog) => {
-      response.json(savedBlog);
+      response.status(201).json(savedBlog);
     })
     .catch((error) => next(error));
 });
@@ -60,7 +60,7 @@ blogRouter.put("/:id", (request, response, next) => {
   )
     .then((blog) => {
       if (blog) {
-        response.json(blog);
+        response.status(200).json(blog);
       } else {
         response.status(404).end();
       }
