@@ -5,15 +5,30 @@ const supertest = require("supertest");
 const helper = require("./test_helper");
 const app = require("../app");
 const Blog = require("../models/blog");
-const { title } = require("node:process");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 const api = supertest(app);
 describe("when there is initially some blogs saved", () => {
   beforeEach(async () => {
     await Blog.deleteMany({});
+    await User.deleteMany({});
     console.log("cleared");
 
-    await Blog.insertMany(helper.initialBlogs);
+    const passwordHash = await bcrypt.hash("password", 10);
+    const user = new User({
+      username: "Test",
+      name: "Anyone",
+      passwordHash,
+    });
+
+    await user.save();
+
+    const blogWithUser = helper.initialBlogs.map((blog) => {
+      return { ...blog, user: user._id };
+    });
+
+    await Blog.insertMany(blogWithUser);
     console.log("done");
   });
 
@@ -28,17 +43,23 @@ describe("when there is initially some blogs saved", () => {
 
   test("the unique identifier property of the blog posts is named id", async () => {
     const response = await api.get("/api/blogs");
+    const user = await api.get("/api/users");
     assert.deepStrictEqual(response.body[0]._id, undefined);
     assert.deepStrictEqual(response.body[0].id, "5a422a851b54a676234d17f7");
+    assert.deepStrictEqual(response.body[0].user, user.body[0]);
   });
 
   describe("addition of a new blog", () => {
     test("test a valid blog can be added", async () => {
+      const response = await api.get("/api/users");
+
+      const userId = response.body[0].id;
       const newBlog = {
         title: "Blu blu bluuu",
         author: "F.I.S.H",
         url: "https://homepages.cwi.nl/~storm/teaching/reader/fghsjsthsrthg.pdf",
         likes: 10,
+        user: userId,
       };
 
       await api
@@ -55,10 +76,14 @@ describe("when there is initially some blogs saved", () => {
     });
 
     test("test a blog without property like, like will be defaulted as 0 ", async () => {
+      const response = await api.get("/api/users");
+      const userId = response.body[0].id;
+
       const newBlog = {
         title: "Meooow",
         author: "C.A.T",
         url: "https://homepages.cwi.nl/~storm/teaching/reader/cihyghohwo.pdf",
+        user: userId,
       };
 
       await api
