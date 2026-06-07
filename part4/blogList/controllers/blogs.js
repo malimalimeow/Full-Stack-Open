@@ -1,6 +1,7 @@
 const blogRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 blogRouter.get("/", async (request, response) => {
   try {
@@ -29,11 +30,10 @@ blogRouter.get("/:id", async (request, response, next) => {
 blogRouter.post("/", async (request, response, next) => {
   try {
     const body = request.body;
-    const user = await User.findOne({});
-
+    const user = request.user;
     if (!user) {
       return response
-        .status(400)
+        .status(401)
         .json({ error: "userId missing or not valid" });
     }
 
@@ -42,7 +42,7 @@ blogRouter.post("/", async (request, response, next) => {
       author: body.author,
       url: body.url,
       likes: body.likes,
-      user: user.id,
+      user: user._id,
     });
 
     const savedBlog = await blog.save();
@@ -56,12 +56,27 @@ blogRouter.post("/", async (request, response, next) => {
 
 blogRouter.delete("/:id", async (request, response, next) => {
   try {
-    const blog = await Blog.findByIdAndDelete(request.params.id);
-
-    if (blog) {
-      response.status(204).end();
-    } else {
+    const blogToDelete = await Blog.findById(request.params.id);
+    if (!blogToDelete) {
       response.status(404).end();
+    }
+    const user = request.user;
+    if (!user) {
+      return response
+        .status(400)
+        .json({ error: "userId missing or not valid" });
+    } else if (blogToDelete.user.toString() !== user.id.toString()) {
+      return response
+        .status(404)
+        .json({ error: "blog can be deleted only by the user who added it " });
+    } else {
+      const blog = await Blog.findByIdAndDelete(request.params.id);
+
+      if (blog) {
+        response.status(204).end();
+      } else {
+        response.status(404).end();
+      }
     }
   } catch (error) {
     next(error);

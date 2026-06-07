@@ -13,7 +13,7 @@ usersRouter.get("/", async (request, response, next) => {
 
 usersRouter.get("/:id", async (request, response, next) => {
   try {
-    const user = User.findById(request.params.id);
+    const user = await User.findById(request.params.id);
 
     if (user) {
       response.status(200).json(user);
@@ -54,7 +54,7 @@ usersRouter.post("/", async (request, response, next) => {
 
 usersRouter.delete("/:id", async (request, response, next) => {
   try {
-    const user = User.findByIdAndDelete(request.params.id);
+    const user = await User.findByIdAndDelete(request.params.id);
 
     if (user) {
       response.status(204).end();

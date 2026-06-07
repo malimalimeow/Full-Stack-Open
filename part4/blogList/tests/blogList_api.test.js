@@ -10,6 +10,7 @@ const bcrypt = require("bcrypt");
 
 const api = supertest(app);
 describe("when there is initially some blogs saved", () => {
+  let token = null;
   beforeEach(async () => {
     await Blog.deleteMany({});
     await User.deleteMany({});
@@ -23,6 +24,13 @@ describe("when there is initially some blogs saved", () => {
     });
 
     await user.save();
+
+    const loginResponse = await api.post("/api/login").send({
+      username: "Test",
+      password: "password",
+    });
+
+    token = loginResponse.body.token;
 
     const blogWithUser = helper.initialBlogs.map((blog) => {
       return { ...blog, user: user._id };
@@ -50,20 +58,40 @@ describe("when there is initially some blogs saved", () => {
   });
 
   describe("addition of a new blog", () => {
-    test("test a valid blog can be added", async () => {
-      const response = await api.get("/api/users");
+    test("test a request without token will be rejected ", async () => {
+      const user = await api.get("/api/users");
 
-      const userId = response.body[0].id;
       const newBlog = {
         title: "Blu blu bluuu",
         author: "F.I.S.H",
         url: "https://homepages.cwi.nl/~storm/teaching/reader/fghsjsthsrthg.pdf",
         likes: 10,
-        user: userId,
+        user: user.body[0].id,
+      };
+
+      const result = await api
+        .post("/api/blogs")
+        .set("Authorization", "")
+        .send(newBlog)
+        .expect(401);
+
+      console.log(result.body);
+
+      const blogAtEnd = await helper.blogInDb();
+      assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length);
+    });
+
+    test("test a valid blog can be added", async () => {
+      const newBlog = {
+        title: "Blu blu bluuu",
+        author: "F.I.S.H",
+        url: "https://homepages.cwi.nl/~storm/teaching/reader/fghsjsthsrthg.pdf",
+        likes: 10,
       };
 
       await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /json/);
@@ -76,18 +104,15 @@ describe("when there is initially some blogs saved", () => {
     });
 
     test("test a blog without property like, like will be defaulted as 0 ", async () => {
-      const response = await api.get("/api/users");
-      const userId = response.body[0].id;
-
       const newBlog = {
         title: "Meooow",
         author: "C.A.T",
         url: "https://homepages.cwi.nl/~storm/teaching/reader/cihyghohwo.pdf",
-        user: userId,
       };
 
       await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /json/);
@@ -106,7 +131,11 @@ describe("when there is initially some blogs saved", () => {
         author: "C.A.T",
       };
 
-      await api.post("/api/blogs").send(newBlog).expect(400);
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlog)
+        .expect(400);
 
       const blogAtEnd = await helper.blogInDb();
       assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length);
@@ -118,7 +147,11 @@ describe("when there is initially some blogs saved", () => {
         url: "https://homepages.cwi.nl/~storm/teaching/reader/notitle.pdf",
       };
 
-      await api.post("/api/blogs").send(newBlog).expect(400);
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlog)
+        .expect(400);
 
       const blogAtEnd = await helper.blogInDb();
       assert.strictEqual(blogAtEnd.length, helper.initialBlogs.length);
@@ -137,7 +170,7 @@ describe("when there is initially some blogs saved", () => {
       assert.deepStrictEqual(blogAtEnd, blogAtStart);
     });
 
-    test("succeeds with update data and status code 201 if id is valid", async () => {
+    test("succeeds with update data and status code 200 if id is valid", async () => {
       const blogAtStart = await helper.blogInDb();
       const blogToUpdate = blogAtStart[0];
       const UpdateData = { likes: blogToUpdate.likes + 1 };
@@ -158,7 +191,10 @@ describe("when there is initially some blogs saved", () => {
       const blogAtStart = await helper.blogInDb();
       const blogToDelete = blogAtStart[0];
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+      await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(204);
 
       const blogAtEnd = await helper.blogInDb();
 
