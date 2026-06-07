@@ -1,0 +1,23 @@
+DELETE http://localhost:3003/api/blogs/6a2491c2116d60ae92478c2b
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvIiwiaWQiOiI2YTIzNjcyM2Q2ZjFjNWM3Y2VhYjgzZTAiLCJpYXQiOjE3ODA3ODQzNjIsImV4cCI6MTc4MDc4Nzk2Mn0.4vHkYq-k2b0rBFRriPDXD3JdJw-q6hGw8_rOfIeITV8
+
+
+###
+
+PUT http://localhost:3003/api/blogs/6a14929e1c47a15f2b379b7d
+content-type: application/json
+
+{  "title": "POOOOOOO",
+  "author": "MEOW",
+  "url": "https://localhost:3003/MEEEEEOWWWW",
+  "likes": 128364640860418
+}
+
+###
+
+POST  http://localhost:3003/api/login
+Content-Type: application/json
+
+{"username":"hello",
+"password":"hello"}
+
