@@ -4,9 +4,9 @@ GET  http://localhost:3003/api/users
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
-{"username":"hello",
-"name":"hgi",
-"password":"hello"}
+{"username":"meow",
+"name":"hi",
+"password":"meow123"}
 
 ###
 
@@ -17,3 +17,5 @@ Content-Type: application/json
 "password":"hello"}
 
 
+###
+DELETE http://localhost:3003/api/users/6a236723d6f1c5c7ceab83e0

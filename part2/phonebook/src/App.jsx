@@ -3,18 +3,18 @@ import axios from 'axios'
 import personsService from './services/personsService'
 import './app.css'
 
-const Notification = ({ message, isError,setMessage }) => {
-  useEffect(()=>{
+const Notification = ({ message, isError, setMessage }) => {
+  useEffect(() => {
     //prevent it from infinite loop =>cuz setMsg to null is also a change to useEffect.
     if (message === null) {
-    return 
-  }
-  //set a timer for 5 sec
-  const timer=setTimeout(()=>{setMessage(null)},5000)
-  //remove it if second timer triggered
-  return()=>clearTimeout(timer)
+      return
+    }
+    //set a timer for 5 sec
+    const timer = setTimeout(() => { setMessage(null) }, 5000)
+    //remove it if second timer triggered
+    return () => clearTimeout(timer)
 
-},[message,setMessage])
+  }, [message, setMessage])
 
   if (message === null) {
     return null
@@ -55,11 +55,14 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, number, setNumbe
             const update_person = persons.map(p => p.id === returnedPerson.id ? returnedPerson : p)
             setPersons(update_person)
             setMessage("database updated")
+            setNewName('')
+            setNumber('')
             setIsError(false)
           })
           .catch(error => {
-            setMessage(`can't find ${newName}`)
+            setMessage(error.response.data.error)
             setIsError(true)
+
           })
       }
     } else {
@@ -68,11 +71,17 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, number, setNumbe
         .create(newPerson)
         .then(response => {
           setPersons(persons.concat(response))
+          setNewName('')
+          setNumber('')
+          setMessage(`Added ${newName} `)
+          setIsError(false)
         })
-      setNewName('')
-      setNumber('')
-      setMessage(`Added ${newName} `)
-      setIsError(false)
+        .catch(error => {
+            setMessage(error.response.data.error)
+            setIsError(true)
+
+          })
+
     }
   }
 
@@ -88,7 +97,7 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, number, setNumbe
     <form onSubmit={addName}>
       <div>
         <p>name: <input required value={newName} type="text" onChange={handleNameChange} /></p>
-        <p>number: <input required value={number} type="number" onChange={handleNumberChange} /></p>
+        <p>number: <input required value={number} type="text" onChange={handleNumberChange} /></p>
       </div>
       <div>
         <button type="submit">add</button>
@@ -98,7 +107,7 @@ const PersonForm = ({ persons, setPersons, newName, setNewName, number, setNumbe
 
 }
 
-const Persons = ({ persons, filter, setPersons,setIsError, setMessage }) => {
+const Persons = ({ persons, filter, setPersons, setIsError, setMessage }) => {
 
   const personToShow = filter === "" ? persons : persons.filter(f => f.name.toLowerCase().startsWith(filter.toLowerCase()))
 
@@ -109,7 +118,7 @@ const Persons = ({ persons, filter, setPersons,setIsError, setMessage }) => {
     </div>)
 }
 
-const PersonLine = ({ persons, personToShow, setPersons, setIsError, setMessage}) => {
+const PersonLine = ({ persons, personToShow, setPersons, setIsError, setMessage }) => {
   const handleDelete = (name, id) => {
     if (window.confirm(`Delete ${name}?`)) {
       personsService
@@ -146,7 +155,7 @@ const App = () => {
   const [number, setNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [isError, setIsError] = useState(false)
-  const [message, setMessage] = useState (null)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     personsService
@@ -160,7 +169,7 @@ const App = () => {
       })
   }, [])
 
- 
+
 
   return (
     <div>
@@ -177,7 +186,7 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <Persons setMessage={setMessage} setIsError={setIsError}  setPersons={setPersons} persons={persons} filter={filter} />
+      <Persons setMessage={setMessage} setIsError={setIsError} setPersons={setPersons} persons={persons} filter={filter} />
 
     </div>
   )

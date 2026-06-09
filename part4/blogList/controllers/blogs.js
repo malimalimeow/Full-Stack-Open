@@ -71,9 +71,11 @@ blogRouter.delete("/:id", async (request, response, next) => {
         .json({ error: "blog can be deleted only by the user who added it " });
     } else {
       const blog = await Blog.findByIdAndDelete(request.params.id);
-
       if (blog) {
-        response.status(204).end();
+        await User.findByIdAndUpdate(user.id, {
+          $pull: { blogs: request.params.id },
+        });
+        response.status(200).json(blog);
       } else {
         response.status(404).end();
       }
