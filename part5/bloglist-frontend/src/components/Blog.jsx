@@ -18,7 +18,7 @@ const Blog = ({ blog, handleUpdate, handleDelete }) => {
 
   const removeBlog = (event) => {
     event.preventDefault();
-    handleDelete(blog.id);
+    handleDelete(blog.id, blog.title, blog.author);
   };
 
   return (
