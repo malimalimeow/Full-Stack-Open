@@ -2,52 +2,29 @@ import { useState } from "react";
 import blogService from "../services/blogService";
 
 const CreateBlog = ({ tools }) => {
-  const {
-    title,
-    setTitle,
-    author,
-    setAuthor,
-    blogLink,
-    setBlogLink,
-    message,
-    setMessage,
-    blogs,
-    setBlogs,
-    isError,
-    setIsError,
-  } = tools;
+  const { message, setMessage, isError, setIsError, handleCreate } = tools;
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [blogLink, setBlogLink] = useState("");
 
-  const handleCreate = async (event) => {
+  const CreateBlog = (event) => {
     event.preventDefault();
-    try {
-      const response = await blogService.create({
-        title: title,
-        author: author,
-        url: blogLink,
-      });
-      setIsError(false);
-      setMessage(`A new blog ${title} by ${author} added`);
-      setBlogs(blogs.concat(response));
-      setTimeout(() => {
-        setMessage(null);
-        setTitle("");
-        setAuthor("");
-        setBlogLink("");
-      }, 5000);
-    } catch (exception) {
-      const errorMessage =
-        exception.response?.data?.error || "something went wrong";
-      setMessage(`Failed to create blog because ${errorMessage}`);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    }
+    handleCreate({
+      title: title,
+      author: author,
+      url: blogLink,
+    });
+    setIsError(false);
+    setMessage(`A new blog ${title} by ${author} added`);
+    setTitle("");
+    setAuthor("");
+    setBlogLink("");
   };
 
   return (
     <>
       <h2>Create New</h2>
-      <form onSubmit={handleCreate}>
+      <form onSubmit={CreateBlog}>
         <div>
           <label>
             Title:

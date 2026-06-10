@@ -1,15 +1,12 @@
 import { useState } from "react";
 import loginService from "../services/loginService";
 import blogService from "../services/blogService";
+import Notification from "./Notification";
 
 const Login = ({ tools }) => {
   const {
     user,
     setUser,
-    username,
-    setUsername,
-    password,
-    setPassword,
     message,
     setMessage,
     login,
@@ -17,6 +14,11 @@ const Login = ({ tools }) => {
     isError,
     setIsError,
   } = tools;
+
+  const notiTools = { message, isError, setMessage };
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -33,20 +35,13 @@ const Login = ({ tools }) => {
       setLogin(true);
     } catch (exception) {
       setMessage("wrong credentials");
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
     }
   };
 
   return (
     <>
       <h1>Log in to application</h1>
-      {message !== null && (
-        <p className={`messageTheme ${isError ? "error" : "success"}`}>
-          {message}
-        </p>
-      )}
+      {message !== null && <Notification tools={notiTools} />}
       <form onSubmit={handleLogin}>
         <div>
           <label>

@@ -9,9 +9,11 @@
 
 }
 .error {
-   color:rgb(204, 0, 0)
+   border-color:rgb(204, 0, 0) ;
+   color:rgb(204, 0, 0);
 }
 
 .success{
-   color:rgb(0, 109, 33)
+   border-color:rgb(0, 109, 33);
+   color:rgb(0, 109, 33);
 }
