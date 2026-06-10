@@ -14,6 +14,8 @@ const Login = ({ tools }) => {
     setMessage,
     login,
     setLogin,
+    isError,
+    setIsError,
   } = tools;
 
   const handleLogin = async (event) => {
@@ -38,33 +40,41 @@ const Login = ({ tools }) => {
   };
 
   return (
-    <div>
+    <>
       <h1>Log in to application</h1>
-
+      {message !== null && (
+        <p className={`messageTheme ${isError ? "error" : "success"}`}>
+          {message}
+        </p>
+      )}
       <form onSubmit={handleLogin}>
-        <label>
-          username
-          <input
-            type="text"
-            required
-            autoFocus
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </label>
+        <div>
+          <label>
+            username
+            <input
+              type="text"
+              required
+              autoFocus
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </label>
+        </div>
 
-        <label>
-          password
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
+        <div>
+          <label>
+            password
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </label>
+        </div>
         <button type="submit">login</button>
       </form>
-    </div>
+    </>
   );
 };
 
