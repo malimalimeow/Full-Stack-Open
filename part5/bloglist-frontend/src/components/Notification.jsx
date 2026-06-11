@@ -1,27 +1,28 @@
-import { useEffect } from "react";
+import { useEffect } from 'react'
 
 const Notification = ({ tools }) => {
-  const { message, isError, setMessage } = tools;
+  const { message, isError, setMessage, setIsError } = tools
 
   useEffect(() => {
     if (message === null) {
-      return;
+      return
     }
 
     const timer = setTimeout(() => {
-      setMessage(null);
-    }, 5000);
+      setMessage(null)
+      setIsError(true)
+    }, 5000)
 
-    return () => clearTimeout(timer);
-  }, [message, setMessage]);
+    return () => clearTimeout(timer)
+  }, [message, setMessage, setIsError])
 
   if (message === null) {
-    return null;
+    return null
   }
 
-  const color = isError ? "error" : "success";
+  const color = isError ? 'error' : 'success'
 
-  return <div className={`messageTheme ${color}`}>{message}</div>;
-};
+  return <div className={`messageTheme ${color}`}>{message}</div>
+}
 
-export default Notification;
+export default Notification

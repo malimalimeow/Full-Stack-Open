@@ -1,42 +1,35 @@
-import { useState } from "react";
-import loginService from "../services/loginService";
-import blogService from "../services/blogService";
-import Notification from "./Notification";
+import { useState } from 'react'
+import loginService from '../services/loginService'
+import blogService from '../services/blogService'
+import Notification from './Notification'
 
 const Login = ({ tools }) => {
-  const {
-    user,
-    setUser,
-    message,
-    setMessage,
-    login,
-    setLogin,
-    isError,
-    setIsError,
-  } = tools;
+  const { setUser, message, setMessage, setLogin, isError } = tools
 
-  const notiTools = { message, isError, setMessage };
+  const notiTools = { message, isError, setMessage }
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const user = await loginService.authorize({
         username: username,
         password: password,
-      });
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
-      setLogin(true);
+      })
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+      setLogin(true)
     } catch (exception) {
-      setMessage("wrong credentials");
+      const errorMessage =
+        exception.response?.data?.error || 'something went wrong'
+      setMessage(`Failed to login because ${errorMessage}`)
     }
-  };
+  }
 
   return (
     <>
@@ -70,7 +63,7 @@ const Login = ({ tools }) => {
         <button type="submit">login</button>
       </form>
     </>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

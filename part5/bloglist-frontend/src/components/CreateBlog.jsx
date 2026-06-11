@@ -1,25 +1,24 @@
-import { useState } from "react";
-import blogService from "../services/blogService";
+import { useState } from 'react'
 
 const CreateBlog = ({ tools }) => {
-  const { message, setMessage, isError, setIsError, handleCreate } = tools;
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [blogLink, setBlogLink] = useState("");
+  const { setMessage, setIsError, handleCreate } = tools
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [blogLink, setBlogLink] = useState('')
 
   const CreateBlog = (event) => {
-    event.preventDefault();
+    event.preventDefault()
     handleCreate({
       title: title,
       author: author,
       url: blogLink,
-    });
-    setIsError(false);
-    setMessage(`A new blog ${title} by ${author} added`);
-    setTitle("");
-    setAuthor("");
-    setBlogLink("");
-  };
+    })
+    setIsError(false)
+    setMessage(`A new blog ${title} by ${author} added`)
+    setTitle('')
+    setAuthor('')
+    setBlogLink('')
+  }
 
   return (
     <>
@@ -62,6 +61,6 @@ const CreateBlog = ({ tools }) => {
         <button type="submit">Create Blog</button>
       </form>
     </>
-  );
-};
-export default CreateBlog;
+  )
+}
+export default CreateBlog
