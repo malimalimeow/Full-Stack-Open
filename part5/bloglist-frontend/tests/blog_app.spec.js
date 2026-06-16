@@ -1,12 +1,13 @@
 import { test, expect } from "@playwright/test";
+import { loginWith, createBlog } from "./helper";
 
 test.describe("Blog app", () => {
   test.beforeEach(async ({ page, request }) => {
-    await request.post("http:/localhost:3003/api/testing/reset");
-    await request.post("http:/localhost:3003/api/users", {
+    await request.post("/api/testing/reset");
+    await request.post("/api/users", {
       data: { name: "test", username: "test", password: "test" },
     });
-    await page.goto("http://localhost:5173");
+    await page.goto("/");
   });
 
   test("Login form is shown", async ({ page }) => {
