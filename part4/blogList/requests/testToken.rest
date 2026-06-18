@@ -4,9 +4,9 @@ GET  http://localhost:3003/api/users
 POST http://localhost:3003/api/users
 Content-Type: application/json
 
-{"username":"meow",
-"name":"hi",
-"password":"meow123"}
+{"username":"hello",
+"name":"hello",
+"password":"hello"}
 
 ###
 

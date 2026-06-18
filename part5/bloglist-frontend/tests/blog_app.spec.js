@@ -7,6 +7,9 @@ test.describe("Blog app", () => {
     await request.post("/api/users", {
       data: { name: "test", username: "test", password: "test" },
     });
+    await request.post("/api/users", {
+      data: { name: "fake", username: "fake", password: "fake" },
+    });
     await page.goto("/");
   });
 
@@ -20,16 +23,12 @@ test.describe("Blog app", () => {
 
   test.describe("Login", () => {
     test("succeeds with correct credentials", async ({ page }) => {
-      await page.getByLabel("username").fill("test");
-      await page.getByLabel("password").fill("test");
-      await page.getByRole("button", { name: "login" }).click();
+      await loginWith(page, "test", "test");
       await expect(page.getByText("test logged in")).toBeVisible();
     });
 
     test("fails with wrong credentials", async ({ page }) => {
-      await page.getByLabel("username").fill("test");
-      await page.getByLabel("password").fill("wrong");
-      await page.getByRole("button", { name: "login" }).click();
+      await loginWith(page, "test", "wrong");
       await expect(
         page.getByText("Failed to login because invalid username or password"),
       ).toBeVisible();
@@ -38,17 +37,12 @@ test.describe("Blog app", () => {
 
   test.describe("When logged in", () => {
     test.beforeEach(async ({ page }) => {
-      await page.getByLabel("username").fill("test");
-      await page.getByLabel("password").fill("test");
-      await page.getByRole("button", { name: "login" }).click();
+      await loginWith(page, "test", "test");
       await page.getByRole("button", { name: "Create Blog" }).click();
     });
 
     test("a new blog can be created", async ({ page }) => {
-      await page.getByLabel("Title:").fill("test");
-      await page.getByLabel("Author:").fill("test");
-      await page.getByLabel("Url:").fill("test");
-      await page.getByRole("button", { name: "Create Blog" }).click();
+      await createBlog(page, "test", "test", "test");
       await expect(
         page.getByText("A new blog test by test added"),
       ).toBeVisible();
@@ -57,10 +51,7 @@ test.describe("Blog app", () => {
 
     test.describe("After logged in", () => {
       test.beforeEach(async ({ page }) => {
-        await page.getByLabel("Title:").fill("test");
-        await page.getByLabel("Author:").fill("test");
-        await page.getByLabel("Url:").fill("test");
-        await page.getByRole("button", { name: "Create Blog" }).click();
+        await createBlog(page, "test", "test", "test");
         await page.getByRole("button", { name: "show" }).click();
       });
 
@@ -75,6 +66,20 @@ test.describe("Blog app", () => {
         await page.getByRole("button", { name: "Remove" }).click();
         await expect(page.getByText("Blog deleted")).toBeVisible();
         await expect(page.getByText("test-test")).not.toBeVisible();
+      });
+
+      test.describe("new user add", () => {
+        test.beforeEach(async ({ page }) => {
+          await page.getByRole("button", { name: "log out" }).click();
+          await loginWith(page, "fake", "fake");
+          await page.getByRole("button", { name: "show" }).click();
+        });
+
+        test("non-creator can't see remove button", async ({ page }) => {
+          await expect(
+            page.getByRole("button", { name: "Remove" }),
+          ).not.toBeVisible();
+        });
       });
     });
   });
