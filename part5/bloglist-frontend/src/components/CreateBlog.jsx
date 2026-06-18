@@ -1,24 +1,28 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const CreateBlog = ({ tools }) => {
-  const { setMessage, setIsError, handleCreate } = tools
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [blogLink, setBlogLink] = useState('')
+  const { setMessage, setIsError, handleCreate } = tools;
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [blogLink, setBlogLink] = useState("");
+  const navigate = useNavigate();
+  const toBlog = () => navigate("/");
 
   const CreateBlog = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     handleCreate({
       title: title,
       author: author,
       url: blogLink,
-    })
-    setIsError(false)
-    setMessage(`A new blog ${title} by ${author} added`)
-    setTitle('')
-    setAuthor('')
-    setBlogLink('')
-  }
+    });
+    setIsError(false);
+    setMessage(`A new blog ${title} by ${author} added`);
+    setTitle("");
+    setAuthor("");
+    setBlogLink("");
+    toBlog();
+  };
 
   return (
     <>
@@ -61,6 +65,6 @@ const CreateBlog = ({ tools }) => {
         <button type="submit">Create Blog</button>
       </form>
     </>
-  )
-}
-export default CreateBlog
+  );
+};
+export default CreateBlog;

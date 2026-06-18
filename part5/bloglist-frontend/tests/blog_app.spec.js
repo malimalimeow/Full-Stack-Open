@@ -68,6 +68,23 @@ test.describe("Blog app", () => {
         await expect(page.getByText("test-test")).not.toBeVisible();
       });
 
+      test("the blogs are arranged in the order according to the likes in descending order", async ({
+        page,
+      }) => {
+        await createBlog(page, "second Test", "second Test", "second Test");
+        await page
+          .getByText("second Test")
+          .getByRole("button", { name: "show" })
+          .click();
+
+        const blogs = await page.getByTestId("blogTest");
+        await expect(blogs.nth(0)).toContainText("test");
+        await expect(blogs.nth(1)).toContainText("second Test");
+        await blogs.nth(1).getByRole("button", { name: "like" }).click();
+        await expect(blogs.nth(0)).toContainText("second Test");
+        await expect(blogs.nth(1)).toContainText("test");
+      });
+
       test.describe("new user add", () => {
         test.beforeEach(async ({ page }) => {
           await page.getByRole("button", { name: "log out" }).click();

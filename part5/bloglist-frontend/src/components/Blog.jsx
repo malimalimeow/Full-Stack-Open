@@ -1,15 +1,13 @@
 import { useState } from "react";
-const Blog = ({ blog, handleUpdate, handleDelete, user }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
+import { useParams, useNavigate } from "react-router-dom";
+
+const Blog = ({ blogs, handleUpdate, handleDelete, user }) => {
   const [show, setShow] = useState(false);
 
-  const buttonWord = show ? "hide" : "show";
+  const id = useParams().id;
+  const blog = blogs.find((b) => b.id === id);
+  const navigate = useNavigate();
+  const toBlog = () => navigate("/");
 
   const addLike = (event) => {
     event.preventDefault();
@@ -19,28 +17,23 @@ const Blog = ({ blog, handleUpdate, handleDelete, user }) => {
   const removeBlog = (event) => {
     event.preventDefault();
     handleDelete(blog.id, blog.title, blog.author);
+    toBlog();
   };
+  const showLike = user !== "" ? true : false;
 
-  const showRemove = user.username === blog.user.username ? true : false;
+  const showRemove = user.username || "" === blog.user.username ? true : false;
 
   console.log(user);
   return (
-    <div style={blogStyle}>
-      {blog.title}-{blog.author}
-      <button onClick={() => setShow(!show)}>{buttonWord}</button>
-      {show ? (
-        <>
-          <p>
-            Like: {blog.likes}
-            <button onClick={addLike}>like</button>
-          </p>
-          <p>Url: {blog.url}</p>
-          <p>created by:{blog.user.name}</p>
-          {showRemove && <button onClick={removeBlog}>Remove</button>}
-        </>
-      ) : (
-        ""
-      )}
+    <div data-testid="blogTest">
+      {blog.author}:{blog.title}
+      <p>
+        Like: {blog.likes}
+        {showLike ? <button onClick={addLike}>like</button> : ""}
+      </p>
+      <p>Url: {blog.url}</p>
+      <p>created by:{blog.user.name}</p>
+      {showRemove && <button onClick={removeBlog}>Remove</button>}
     </div>
   );
 };
