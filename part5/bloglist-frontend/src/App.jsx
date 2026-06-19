@@ -25,6 +25,7 @@ const App = () => {
     } catch (exception) {
       const errorMessage =
         exception.response?.data?.error || "something went wrong";
+      setIsError(true);
       setMessage(`Failed to create blog because ${errorMessage}`);
     }
   };
@@ -36,6 +37,7 @@ const App = () => {
     } catch (exception) {
       const errorMessage =
         exception.response?.data?.error || "something went wrong";
+      setIsError(true);
       setMessage(`Failed to like because ${errorMessage}`);
     }
   };
@@ -52,6 +54,7 @@ const App = () => {
     } catch (exception) {
       const errorMessage =
         exception.response?.data?.error || "something went wrong";
+      setIsError(true);
       setMessage(`Failed to delete because ${errorMessage}`);
     }
   };
@@ -70,6 +73,7 @@ const App = () => {
     setMessage,
     setLogin,
     isError,
+    setIsError,
   };
 
   useEffect(() => {
@@ -90,6 +94,8 @@ const App = () => {
     console.log("bye");
     setUser("");
     setLogin(false);
+    setMessage(null);
+    setIsError(true);
     window.localStorage.removeItem("loggedBlogAppUser");
     toBlog();
   };
@@ -97,8 +103,6 @@ const App = () => {
   const padding = {
     padding: 5,
   };
-
-  console.log(login, user);
 
   return (
     <>

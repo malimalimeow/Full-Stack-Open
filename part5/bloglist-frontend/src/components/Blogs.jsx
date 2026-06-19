@@ -12,8 +12,7 @@ const Blogs = ({ blogs }) => {
           .map((blog) => (
             <li key={blog.id}>
               <Link to={`/blogs/${blog.id}`}>
-                {blog.title}
-                {blog.author}
+                {blog.title} {blog.author}
               </Link>
             </li>
           ))}

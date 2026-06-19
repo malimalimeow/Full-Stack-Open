@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import CreateBlog from "./CreateBlog";
+import { BrowserRouter } from "react-router-dom";
 
 test("<CreateBlog/> create a blog and calls onSubmit", async () => {
   const createBlog = vi.fn();
@@ -12,7 +13,11 @@ test("<CreateBlog/> create a blog and calls onSubmit", async () => {
     setIsError: vi.fn(),
   };
 
-  render(<CreateBlog tools={testTools} />);
+  render(
+    <BrowserRouter>
+      <CreateBlog tools={testTools} />
+    </BrowserRouter>,
+  );
 
   const input_title = screen.getByLabelText("Title:");
   const input_Url = screen.getByLabelText("Url:");

@@ -5,7 +5,7 @@ import Notification from "./Notification";
 import { Link, useNavigate } from "react-router-dom";
 
 const Login = ({ tools }) => {
-  const { setUser, message, setMessage, setLogin, isError } = tools;
+  const { setUser, message, setMessage, setLogin, isError, setIsError } = tools;
 
   const notiTools = { message, isError, setMessage };
 
@@ -22,7 +22,6 @@ const Login = ({ tools }) => {
         password: password,
       });
       window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      console.log(user);
       blogService.setToken(user.token);
       setUser(user);
       setUsername("");
@@ -32,6 +31,7 @@ const Login = ({ tools }) => {
     } catch (exception) {
       const errorMessage =
         exception.response?.data?.error || "something went wrong";
+      setIsError(true);
       setMessage(`Failed to login because ${errorMessage}`);
     }
   };

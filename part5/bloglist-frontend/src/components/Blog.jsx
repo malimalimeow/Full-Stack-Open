@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const Blog = ({ blogs, handleUpdate, handleDelete, user }) => {
+const Blog = ({ blogs, handleUpdate, handleDelete, user, id: propId }) => {
   const [show, setShow] = useState(false);
 
-  const id = useParams().id;
+  const id = useParams().id || propId;
   const blog = blogs.find((b) => b.id === id);
   const navigate = useNavigate();
   const toBlog = () => navigate("/");
@@ -19,9 +19,9 @@ const Blog = ({ blogs, handleUpdate, handleDelete, user }) => {
     handleDelete(blog.id, blog.title, blog.author);
     toBlog();
   };
-  const showLike = user !== "" ? true : false;
+  const showLike = user && user.username;
 
-  const showRemove = user.username || "" === blog.user.username ? true : false;
+  const showRemove = user?.username === blog?.user?.username;
 
   console.log(user);
   return (

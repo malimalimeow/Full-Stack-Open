@@ -9,8 +9,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "preview": "vite preview",
-    "test-vi": "vitest run",
-    "test": "playwright test --project chromium",
+    "test-vi": "vitest run src/components",
+    "test": "playwright test --project=chromium",
     "test:all": "playwright test",
     "test:report": "playwright show-report"
   },
