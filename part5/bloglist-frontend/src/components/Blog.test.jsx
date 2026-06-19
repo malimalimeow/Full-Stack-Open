@@ -37,9 +37,7 @@ test("renders content", () => {
     </BrowserRouter>,
   );
 
-  const element = screen.getByText(
-    "Dan Abramov:Deep Dive Into React Server Components",
-  );
+  const element = screen.getByText("Deep Dive Into React Server Components");
   expect(element).toBeDefined();
 });
 
@@ -51,9 +49,9 @@ test("Blog information and the number of likes are displayed to unauthenticated 
   );
 
   const element_url = screen.getByText(
-    "Url: https://react.dev/blog/server-components",
+    "https://react.dev/blog/server-components",
   );
-  const element_like = screen.getByText("Like: 67");
+  const element_like = screen.getByText("67");
   const like_button = screen.queryByText("like");
   const remove_button = screen.queryByText("remove");
 

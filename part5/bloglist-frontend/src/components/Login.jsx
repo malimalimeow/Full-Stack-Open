@@ -3,6 +3,7 @@ import loginService from "../services/loginService";
 import blogService from "../services/blogService";
 import Notification from "./Notification";
 import { Link, useNavigate } from "react-router-dom";
+import { TextField, Button } from "@mui/material";
 
 const Login = ({ tools }) => {
   const { setUser, message, setMessage, setLogin, isError, setIsError } = tools;
@@ -36,36 +37,36 @@ const Login = ({ tools }) => {
     }
   };
 
+  console.log(message);
+
   return (
     <>
       <h1>Log in to application</h1>
-      {message !== null && <Notification tools={notiTools} />}
+
       <form onSubmit={handleLogin}>
         <div>
-          <label>
-            username
-            <input
-              type="text"
-              required
-              autoFocus
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
+          <TextField
+            label="username"
+            type="text"
+            required
+            autoFocus
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
 
         <div>
-          <label>
-            password
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </label>
+          <TextField
+            label="password"
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </div>
-        <button type="submit">login</button>
+        <div>
+          <Button type="submit">login</Button>
+        </div>
       </form>
     </>
   );

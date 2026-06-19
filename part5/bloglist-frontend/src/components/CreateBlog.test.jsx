@@ -19,9 +19,10 @@ test("<CreateBlog/> create a blog and calls onSubmit", async () => {
     </BrowserRouter>,
   );
 
-  const input_title = screen.getByLabelText("Title:");
-  const input_Url = screen.getByLabelText("Url:");
-  const input_Author = screen.getByLabelText("Author:");
+  const inputs = screen.getAllByRole("textbox");
+  const input_title = inputs[0];
+  const input_Url = inputs[2];
+  const input_Author = inputs[1];
   const sendButton = screen.getByText("Create Blog");
 
   await user.type(input_title, "Go To Statement Considered Harmful");

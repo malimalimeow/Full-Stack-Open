@@ -1,3 +1,4 @@
+import { TextField, Button } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -29,40 +30,42 @@ const CreateBlog = ({ tools }) => {
       <h2>Create New</h2>
       <form onSubmit={CreateBlog}>
         <div>
-          <label>
-            Title:
-            <input
-              required
-              autoFocus
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-          </label>
+          <TextField
+            label="Title:"
+            required
+            autoFocus
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
+        <br />
         <div>
-          <label>
-            Author:
-            <input
-              required
-              type="text"
-              value={author}
-              onChange={(e) => setAuthor(e.target.value)}
-            />
-          </label>
+          <TextField
+            label="Author:"
+            required
+            type="text"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+          />
         </div>
+        <br />
         <div>
-          <label>
-            Url:
-            <input
-              required
-              type="text"
-              value={blogLink}
-              onChange={(e) => setBlogLink(e.target.value)}
-            />
-          </label>
+          <TextField
+            label="Url:"
+            required
+            type="text"
+            value={blogLink}
+            onChange={(e) => setBlogLink(e.target.value)}
+          />
         </div>
-        <button type="submit">Create Blog</button>
+        <br />
+        <Button
+          sx={{ color: "#1b52ab", border: "1px solid #1b52ab" }}
+          type="submit"
+        >
+          Create Blog
+        </Button>
       </form>
     </>
   );

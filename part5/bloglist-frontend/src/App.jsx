@@ -6,8 +6,8 @@ import CreateBlog from "./components/CreateBlog";
 import blogService from "./services/blogService";
 import Togglable from "./components/Togglable";
 import Notification from "./components/Notification";
-import "./app.css";
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
+import { Container, Button, AppBar, Toolbar } from "@mui/material";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -91,12 +91,11 @@ const App = () => {
   }, []);
 
   const handleLogout = () => {
-    console.log("bye");
     setUser("");
     setLogin(false);
+    window.localStorage.removeItem("loggedBlogAppUser");
     setMessage(null);
     setIsError(true);
-    window.localStorage.removeItem("loggedBlogAppUser");
     toBlog();
   };
 
@@ -104,27 +103,41 @@ const App = () => {
     padding: 5,
   };
 
+  const style = { "&:hover": { bgcolor: "rgba(255,255,255,0.3)" } };
+
   return (
-    <>
-      <div>
-        <Link style={padding} to="/">
-          Blogs
-        </Link>
-        {login ? (
-          <Link style={padding} to="/create">
-            New Blog
-          </Link>
-        ) : (
-          ""
-        )}
-        {login ? (
-          <button onClick={() => handleLogout()}>Log out</button>
-        ) : (
-          <Link style={padding} to="/login">
-            Log in
-          </Link>
-        )}
-      </div>
+    <Container sx={{ lineHeight: 1.6 }}>
+      <AppBar position="static">
+        <Toolbar>
+          <Button color="inherit">
+            <Link to="/" sx={style}>
+              Blogs
+            </Link>
+          </Button>
+          {login ? (
+            <Button color="inherit">
+              <Link to="/create" sx={style}>
+                New Blog
+              </Link>
+            </Button>
+          ) : (
+            ""
+          )}
+          {login ? (
+            <Button color="inherit" onClick={() => handleLogout()}>
+              Log out
+            </Button>
+          ) : (
+            <Button color="inherit">
+              <Link to="/login" sx={style}>
+                Log in
+              </Link>
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+
+      {message !== null && <Notification tools={notiTools} />}
 
       <Routes>
         <Route path="/" element={<Blogs blogs={blogs} />} />
@@ -144,7 +157,7 @@ const App = () => {
 
         <Route path="/create" element={<CreateBlog tools={createTools} />} />
       </Routes>
-    </>
+    </Container>
   );
 };
 

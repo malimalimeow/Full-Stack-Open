@@ -15,7 +15,7 @@ blogRouter.get("/", async (request, response) => {
 
 blogRouter.get("/:id", async (request, response, next) => {
   try {
-    const blog = await Blog.findById(request.params.id);
+    const blog = await Blog.findById(request.params.id).populate("user");
 
     if (blog) {
       response.status(200).json(blog);
@@ -90,8 +90,14 @@ blogRouter.delete("/:id", async (request, response, next) => {
 });
 
 blogRouter.put("/:id", async (request, response, next) => {
-  const { title, author, url, likes } = request.body;
   try {
+    const { title, author, url, likes } = request.body;
+    const user = request.user;
+    if (!user) {
+      return response
+        .status(401)
+        .json({ error: "userId missing or not valid" });
+    }
     const blog = await Blog.findByIdAndUpdate(
       request.params.id,
       {
@@ -104,7 +110,11 @@ blogRouter.put("/:id", async (request, response, next) => {
     );
 
     if (blog) {
-      response.status(200).json(blog);
+      const populatedBlog = await blog.populate("user", {
+        username: 1,
+        name: 1,
+      });
+      response.status(200).json(populatedBlog);
     } else {
       response.status(404).end();
     }

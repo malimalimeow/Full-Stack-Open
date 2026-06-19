@@ -37,25 +37,25 @@ test.describe("Blog app", () => {
 
     test("a new blog can be created", async ({ page }) => {
       await createBlog(page, "test", "test", "test");
-      await expect(page.getByText("test test")).toBeVisible();
+      await expect(page.getByText("test-test")).toBeVisible();
     });
 
     test.describe("After logged in", () => {
       test.beforeEach(async ({ page }) => {
         await createBlog(page, "test", "test", "test");
-        await page.getByRole("link", { name: "test test" }).click();
+        await page.getByRole("link", { name: "test-test" }).click();
       });
 
       test("Blog can be liked", async ({ page }) => {
-        await expect(page.getByText("Like: 0")).toBeVisible();
+        await expect(page.getByText("0")).toBeVisible();
         await page.getByRole("button", { name: "like" }).click();
-        await expect(page.getByText("Like: 1")).toBeVisible();
+        await expect(page.getByText("1")).toBeVisible();
       });
 
       test("Blog can be deleted by the creator", async ({ page }) => {
         page.on("dialog", (dialog) => dialog.accept());
         await page.getByRole("button", { name: "Remove" }).click();
-        await expect(page.getByText("test test")).not.toBeVisible();
+        await expect(page.getByText("test-test")).not.toBeVisible();
       });
     });
   });

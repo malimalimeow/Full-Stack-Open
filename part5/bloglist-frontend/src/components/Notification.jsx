@@ -1,21 +1,15 @@
 import { useEffect } from "react";
+import { Alert } from "@mui/material";
 
 const Notification = ({ tools }) => {
   const { message, isError, setMessage, setIsError } = tools;
 
-  console.log(
-    "🔴 [CCTV 1 - Render] Current Message:",
-    message,
-    "isError:",
-    isError,
-  );
   useEffect(() => {
     if (message === null) {
       return;
     }
 
     const timer = setTimeout(() => {
-      console.log();
       setMessage(null);
     }, 3000);
 
@@ -26,9 +20,14 @@ const Notification = ({ tools }) => {
     return null;
   }
 
-  const color = isError ? "error" : "success";
-
-  return <div className={`messageTheme ${color}`}>{message}</div>;
+  return (
+    <Alert
+      style={{ marginTop: 10, marginBottom: 10 }}
+      severity={isError ? "error" : "success"}
+    >
+      {message}
+    </Alert>
+  );
 };
 
 export default Notification;

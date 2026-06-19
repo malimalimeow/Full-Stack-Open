@@ -16,5 +16,10 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: "./testSetup.js",
+    server: {
+      deps: {
+        inline: [/@mui/, /react-transition-group/],
+      },
+    },
   },
 });
