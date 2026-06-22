@@ -1,12 +1,12 @@
-const Buttons = ({ tools }) => {
-  const { setGood, setBad, setNeutral } = tools;
+import { useReviewAction } from "./store";
+const Buttons = () => {
+  const { incrementGood, incrementBad, incrementNeu } = useReviewAction();
 
   return (
     <div>
-      <h2>give feedback</h2>
-      <button onClick={() => setGood((prev) => prev + 1)}>good</button>
-      <button onClick={() => setNeutral((prev) => prev + 1)}>neutral</button>
-      <button onClick={() => setBad((prev) => prev + 1)}>bad</button>
+      <button onClick={incrementGood}>good</button>
+      <button onClick={incrementNeu}>neutral</button>
+      <button onClick={incrementBad}>bad</button>
     </div>
   );
 };

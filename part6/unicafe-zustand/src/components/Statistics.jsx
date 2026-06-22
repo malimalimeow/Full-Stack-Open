@@ -1,6 +1,9 @@
-const Statistics = ({ stat }) => {
-  const { good, bad, neutral } = stat;
-  const all = good + bad + neutral;
+import { useGood, useNeutral, useBad } from "./store";
+const Statistics = () => {
+  const good = useGood();
+  const neutral = useNeutral();
+  const bad = useBad();
+  const all = good + bad + neutral || 0;
   const average = (good + bad * -1) / all || 0;
   const positive = (good / all) * 100 || 0;
 
