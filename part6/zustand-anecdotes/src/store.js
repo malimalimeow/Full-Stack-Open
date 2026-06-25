@@ -1,13 +1,6 @@
 import { create } from "zustand";
-
-const anecdotesAtStart = [
-  "If it hurts, do it more often",
-  "Adding manpower to a late software project makes it later!",
-  "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-  "Premature optimization is the root of all evil.",
-  "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
-];
+import anecdoteService from "./service/anecdoteService";
+import { useNotiStore } from "./notiStore";
 
 const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -18,26 +11,65 @@ const asObject = (anecdote) => ({
 });
 
 const useAnecdoteStore = create((set) => ({
-  anecdotes: anecdotesAtStart.map(asObject),
+  anecdotes: [],
   filter: "",
-  add: (ane) =>
-    set((state) => ({ anecdotes: state.anecdotes.concat(asObject(ane)) })),
-  vote: (id) =>
-    set((state) => ({
-      anecdotes: state.anecdotes.map((anecdote) =>
-        anecdote.id === id
-          ? { ...anecdote, votes: anecdote.votes + 1 }
-          : anecdote,
-      ),
-    })),
+  initialize: async () => {
+    const anecdotes = await anecdoteService.getAll();
+    set(() => ({ anecdotes }));
+  },
+
+  add: async (content) => {
+    try {
+      const format_content = asObject(content);
+      const ane = await anecdoteService.createNew(format_content);
+      set((state) => ({
+        anecdotes: state.anecdotes.concat(ane),
+      }));
+      useNotiStore.getState().setMessage(`"${ane.content}" is added`);
+    } catch (error) {
+      useNotiStore.getState().setMessage(error);
+    }
+  },
+  vote: async (id) => {
+    try {
+      const ane = useAnecdoteStore
+        .getState()
+        .anecdotes.find((a) => a.id === id);
+      const updated = await anecdoteService.update(id, {
+        ...ane,
+        votes: ane.votes + 1,
+      });
+
+      set((state) => ({
+        anecdotes: state.anecdotes.map((anecdote) =>
+          anecdote.id === id ? updated : anecdote,
+        ),
+      }));
+      useNotiStore.getState().setMessage(`"${ane.content}" is voted`);
+    } catch (error) {
+      useNotiStore.getState().setMessage(error);
+    }
+  },
   setFilter: (value) => set(() => ({ filter: value })),
+  remove: async (id) => {
+    try {
+      await anecdoteService.remove(id);
+      set((state) => ({
+        anecdotes: state.anecdotes.filter((ane) => ane.id !== id),
+      }));
+      useNotiStore.getState().setMessage("An anecdote is deleted");
+    } catch (error) {
+      useNotiStore.getState().setMessage(error);
+    }
+  },
 }));
 
 export const useAnecdoteAdd = () => useAnecdoteStore((state) => state.add);
 export const useAnecdoteVote = () => useAnecdoteStore((state) => state.vote);
+export const useRemove = () => useAnecdoteStore((state) => state.remove);
 export const useAneSetFilter = () =>
   useAnecdoteStore((state) => state.setFilter);
-
+export const useMessage = () => useAnecdoteStore((state) => state.message);
 export const useAnecdotes = () => {
   const anecdotes = useAnecdoteStore((state) => state.anecdotes);
   const filter = useAnecdoteStore((state) => state.filter);
@@ -45,3 +77,5 @@ export const useAnecdotes = () => {
 
   return anecdotes;
 };
+
+useAnecdoteStore.getState().initialize();

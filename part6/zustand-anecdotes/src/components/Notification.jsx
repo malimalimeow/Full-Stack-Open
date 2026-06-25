@@ -1,12 +1,30 @@
+import { useEffect } from "react";
+import { useNotiStore } from "../notiStore";
 const Notification = () => {
+  const message = useNotiStore((state) => state.message);
+  const setMessage = useNotiStore((state) => state.setMessage);
+  console.log(message);
+
+  useEffect(() => {
+    if (message === null) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [message]);
+
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
     borderWidth: 1,
-    marginBottom: 10
-  }
+    marginBottom: 10,
+  };
 
-  return <div style={style}>render here notification...</div>
-}
+  return <>{message !== null && <div style={style}>{message}</div>}</>;
+};
 
-export default Notification
+export default Notification;

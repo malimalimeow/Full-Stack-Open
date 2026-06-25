@@ -2,10 +2,10 @@ import { useAnecdoteAdd } from "../store";
 const AnecdoteForm = () => {
   const add = useAnecdoteAdd();
 
-  const addAnecdote = (e) => {
+  const addAnecdote = async (e) => {
     e.preventDefault();
     const anecdote = e.target.anecdote.value;
-    add(anecdote);
+    await add(anecdote);
     e.target.reset();
   };
 
