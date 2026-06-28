@@ -1,9 +1,10 @@
-import { useAnecdotes, useAnecdoteVote, useRemove } from "../store";
+import { useAnecdotesAction, useAnecdotes } from "../store";
 
 const AnecdoteList = () => {
+  const { vote, remove } = useAnecdotesAction();
   const anecdotes = useAnecdotes();
-  const vote = useAnecdoteVote();
-  const remove = useRemove();
+
+  console.log(anecdotes);
 
   const anecdotesInDesc = [...anecdotes].toSorted((a, b) => b.votes - a.votes);
   const handleDelete = (anecdote) => {

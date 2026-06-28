@@ -1,6 +1,6 @@
-import { useAnecdoteAdd } from "../store";
+import { useAnecdotesAction } from "../store";
 const AnecdoteForm = () => {
-  const add = useAnecdoteAdd();
+  const { add } = useAnecdotesAction();
 
   const addAnecdote = async (e) => {
     e.preventDefault();

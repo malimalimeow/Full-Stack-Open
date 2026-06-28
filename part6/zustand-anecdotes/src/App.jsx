@@ -3,10 +3,14 @@ import AnecdoteForm from "./components/AnecdoteForm";
 import AnecdoteList from "./components/AnecdoteList";
 import Filter from "./components/Filter";
 import Notification from "./components/Notification";
-import { useMessage } from "./store";
+import { useAnecdotesAction } from "./store";
 
 const App = () => {
-  const message = useMessage();
+  const { initialize } = useAnecdotesAction();
+  useEffect(() => {
+    initialize();
+  }, []);
+
   return (
     <div>
       <Filter />

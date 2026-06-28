@@ -1,7 +1,7 @@
-import { useAneSetFilter } from "../store";
+import { useAnecdotesAction } from "../store";
 
 const Filter = () => {
-  const setFilter = useAneSetFilter();
+  const { setFilter } = useAnecdotesAction();
 
   const handleChange = (e) => {
     e.preventDefault();
