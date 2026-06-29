@@ -75,7 +75,9 @@ export const useAnecdotes = () => {
   const filter = useAnecdoteStore((state) => state.filter);
   if (filter !== "") return anecdotes.filter((a) => a.content.includes(filter));
 
-  return anecdotes;
+  const anecdotesInDESC = [...anecdotes].toSorted((a, b) => b.votes - a.votes);
+
+  return anecdotesInDESC;
 };
 export const useAnecdotesAction = () =>
   useAnecdoteStore((state) => state.action);
