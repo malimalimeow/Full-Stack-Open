@@ -6,7 +6,6 @@ const AnecdoteList = () => {
 
   console.log(anecdotes);
 
-  const anecdotesInDesc = [...anecdotes].toSorted((a, b) => b.votes - a.votes);
   const handleDelete = (anecdote) => {
     if (!window.confirm(`Delete "${anecdote.content}"?`)) {
       return;
