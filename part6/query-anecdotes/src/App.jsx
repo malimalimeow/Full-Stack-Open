@@ -1,6 +1,8 @@
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { useAnecdotes } from "./hooks/useAnecdotes";
+import { useContext } from "react";
+import NotificationContext from "./NotificationContext";
 
 const App = () => {
   const {
@@ -11,8 +13,11 @@ const App = () => {
     votes,
   } = useAnecdotes();
 
+  const { message, setMessage } = useContext(NotificationContext);
   const handleVote = (anecdote) => {
     votes(anecdote);
+    setMessage(`anecdote "${anecdote.content}" voted`);
+    console.log(message);
   };
 
   if (isPending) {

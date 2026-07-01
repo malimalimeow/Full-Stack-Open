@@ -1,18 +1,27 @@
+import { useContext, useEffect } from "react";
+import NotificationContext from "../NotificationContext";
 const Notification = () => {
+  const { message, setMessage } = useContext(NotificationContext);
   const style = {
-    border: 'solid',
+    border: "solid",
     padding: 10,
     borderWidth: 1,
-    marginBottom: 5
-  }
-  
-  if (true) return null
+    marginBottom: 5,
+  };
 
-  return (
-    <div style={style}>
-      
-    </div>
-  )
-}
+  useEffect(() => {
+    if (message === null) {
+      return;
+    }
 
-export default Notification
+    const timer = setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [message, setMessage]);
+
+  return <>{message !== null && <div style={style}>{message}</div>}</>;
+};
+
+export default Notification;

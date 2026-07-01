@@ -1,4 +1,7 @@
+import { useContext } from "react";
+import NotificationContext from "../NotificationContext";
 const AnecdoteForm = ({ addAneToServer }) => {
+  const { message, setMessage } = useContext(NotificationContext);
   //create new anecdote
   const getId = () => (100000 * Math.random()).toFixed(0);
 
@@ -13,7 +16,8 @@ const AnecdoteForm = ({ addAneToServer }) => {
     const content = event.target.anecdote.value;
     event.target.reset();
     const newAnecdote = asObject(content);
-    addAneToServer(newAnecdote);
+    const response = addAneToServer(newAnecdote);
+    setMessage(`"${content}" is created`);
   };
   return (
     <div>
